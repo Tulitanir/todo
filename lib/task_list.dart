@@ -37,7 +37,7 @@ class TaskListScreenState extends State<TaskListScreen> {
           DropdownButton(
             value: value,
             items: const [
-              DropdownMenuItem(value: 0, child: Text('Приотритет')),
+              DropdownMenuItem(value: 0, child: Text('Приоритет')),
               DropdownMenuItem(value: 1, child: Text('Дедлайн')),
               DropdownMenuItem(value: 2, child: Text('Завершённые')),
             ],
@@ -180,9 +180,9 @@ class TaskListScreenState extends State<TaskListScreen> {
 
   Future<void> _addTask(Task task) async {
     final db = await DatabaseService().database;
+    db.insert('task', task.toMap());
     _tasks = await _getTasks();
     setState(() {
-      db.insert('task', task.toMap());
       _sortTasks(value);
     });
   }
@@ -193,7 +193,7 @@ class TaskListScreenState extends State<TaskListScreen> {
     task.deadline = null;
     task.finishdate = DateTime.now();
     
-    await db.update(
+    db.update(
       'task',
       task.toMap(),
       where: 'id = ?',
@@ -210,14 +210,14 @@ class TaskListScreenState extends State<TaskListScreen> {
   Future<void> _deleteTask(Task task) async {
     final db = await DatabaseService().database;
 
-    await db.delete(
+    db.delete(
       'task',
       where: 'id = ?',
       whereArgs: [task.id],
     );
 
     _tasks = await _getTasks();
-
+     
     setState(() {
       _sortTasks(value);
     });
